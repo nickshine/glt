@@ -19,5 +19,14 @@
   "bugs": {
     "url": "https://gitlab.com/nickshine/gitlab-ci-ctl/issues"
   },
-  "homepage": "https://gitlab.com/nickshine/gitlab-ci-ctl#readme"
+  "homepage": "https://gitlab.com/nickshine/gitlab-ci-ctl#readme",
+  "dependencies": {
+    "commander": "^2.19.0",
+    "gitlab": "^4.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  }
 }
