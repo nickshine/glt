@@ -7,5 +7,5 @@ test:
   script:
     - npm install
     - npm link
-    - gitlab-ci-ctl --help
+    - glt --help
 
