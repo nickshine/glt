@@ -1,0 +1,11 @@
+image: node:10.15.3
+
+stages:
+  - test
+
+test:
+  script:
+    - npm install
+    - npm link
+    - gitlab-ci-ctl --help
+
