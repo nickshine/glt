@@ -1,15 +1,16 @@
-# gitlab-ci-ctl
+# glt
 
-A command-line interface for controlling GitLab CI pipelines.
->https://gitlab.com/nickshine/gitlab-ci-ctl
+https://gitlab.com/nickshine/glt
+
+>A command-line interface for GitLab tasks.
 
 ## Usage
 
 ```bash
-npm install -g gitlab-ci-ctl
-gitlab-ci-ctl --help
+npm install -g glt
+glt --help
 
 # or
-npx gitlab-ci-ctl --help
+npx glt --help
 ```
 
