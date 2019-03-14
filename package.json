@@ -1,10 +1,10 @@
 {
-  "name": "gitlab-ci-ctl",
+  "name": "glt",
   "version": "0.0.1",
-  "description": "A command-line interface for controlling GitLab CI pipelines.",
+  "description": "A command-line interface for GitLab tasks.",
   "main": "src/cli.js",
   "bin": {
-    "gitlab-ci-ctl": "./src/cli.js"
+    "glt": "./src/glt.js"
   },
   "scripts": {
     "lint": "eslint .",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/nickshine/gitlab-ci-ctl.git"
+    "url": "https://gitlab.com/nickshine/glt.git"
   },
   "keywords": [
     "gitlab",
@@ -21,9 +21,9 @@
   "author": "Nicholas Shine",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/nickshine/gitlab-ci-ctl/issues"
+    "url": "https://gitlab.com/nickshine/glt/issues"
   },
-  "homepage": "https://gitlab.com/nickshine/gitlab-ci-ctl#readme",
+  "homepage": "https://gitlab.com/nickshine/glt#readme",
   "dependencies": {
     "commander": "^2.19.0",
     "gitlab": "^4.4.1",

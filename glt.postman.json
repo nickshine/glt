@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "6f874a71-1c64-4621-8274-9108f0c64327",
+		"name": "glt",
+		"description": "A cli for GitLab tasks\n\nhttps://gitlab.com/nickshine/glt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "All Pipelines by Project ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Private-Token",
+						"value": "{{GITLAB_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{API_URL}}/projects/{{GITLAB_CI_CTL_PROJECT_ID}}/pipelines",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"projects",
+						"{{GITLAB_CI_CTL_PROJECT_ID}}",
+						"pipelines"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Single Pipeline by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Private-Token",
+						"type": "text",
+						"value": "{{GITLAB_TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{GITLAB_API_URL}}/projects/{{GITLAB_CI_CTL_PROJECT_ID}}/pipelines/51761814",
+					"host": [
+						"{{GITLAB_API_URL}}"
+					],
+					"path": [
+						"projects",
+						"{{GITLAB_CI_CTL_PROJECT_ID}}",
+						"pipelines",
+						"51761814"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel a Pipelines Jobs",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Private-Token",
+						"type": "text",
+						"value": "{{GITLAB_TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{GITLAB_API_URL}}/projects/{{GITLAB_CI_CTL_PROJECT_ID}}/pipelines/51761814/cancel",
+					"host": [
+						"{{GITLAB_API_URL}}"
+					],
+					"path": [
+						"projects",
+						"{{GITLAB_CI_CTL_PROJECT_ID}}",
+						"pipelines",
+						"51761814",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a Pipeline",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Private-Token",
+						"type": "text",
+						"value": "{{GITLAB_TOKEN}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{GITLAB_API_URL}}/projects/{{GITLAB_CI_CTL_PROJECT_ID}}/pipelines/51761814",
+					"host": [
+						"{{GITLAB_API_URL}}"
+					],
+					"path": [
+						"projects",
+						"{{GITLAB_CI_CTL_PROJECT_ID}}",
+						"pipelines",
+						"51761814"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "63f693fc-c828-4642-b4d4-f64fc8a848e5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b36b4a8a-e150-4389-8e4d-3727d5e6dca1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "cbf79602-cdc6-4f5d-8769-3b842af0afa9",
+			"key": "GITLAB_TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "ee476091-1ff4-4acc-9555-4034263b86ce",
+			"key": "GITLAB_CI_CTL_PROJECT_ID",
+			"value": "11289575",
+			"type": "string"
+		},
+		{
+			"id": "abbf9cc8-89ba-4a05-a722-75ad9a3dad09",
+			"key": "API_URL",
+			"value": "https://gitlab.com/api/v4",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
