@@ -2,12 +2,13 @@
   "name": "glt",
   "version": "0.0.1",
   "description": "A command-line interface for GitLab tasks.",
-  "main": "src/cli.js",
+  "main": "src/glt.js",
   "bin": {
     "glt": "./src/glt.js"
   },
   "scripts": {
     "lint": "eslint .",
+    "debug": "node --inspect-brk src/glt.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
