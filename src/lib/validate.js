@@ -38,12 +38,24 @@ const validateProjectId = () => {
   }
 };
 
-const validateOptions = () => {
+const validateUrl = () => {
+  if (!program.url) {
+    logger.debug("'--url' flag not provided, falling back to GITLAB_URL env var.");
+    program.url = process.env.GITLAB_URL;
+    if (!program.url) {
+      logger.debug('GITLAB_URL env var note set, falling back to http://gitlab.com');
+      program.url = 'http://gitlab.com';
+    }
+  }
+};
+
+const validateCIOptions = () => {
+  validateUrl();
   validateToken();
   validateProjectId();
 };
 
 module.exports = {
   validateCommand,
-  validateOptions,
+  validateCIOptions,
 };

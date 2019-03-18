@@ -9,6 +9,8 @@
   "scripts": {
     "lint": "eslint .",
     "debug": "node --inspect-brk src/glt.js",
+    "debug-ci": "node --inspect-brk src/glt-ci.js",
+    "debug-ci-cancel": "node --inspect-brk src/glt-ci.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
