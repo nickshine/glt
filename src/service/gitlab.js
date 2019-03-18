@@ -1,5 +1,5 @@
 const { ProjectsBundle } = require('gitlab/dist/es5');
-const logger = require('../logger');
+const logger = require('../lib/logger');
 
 let api;
 
