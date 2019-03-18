@@ -10,7 +10,18 @@ const validateCommand = (commands) => {
   }
 };
 
-const validateToken = () => {
+const resolveUrl = () => {
+  if (!program.url) {
+    logger.debug("'--url' flag not provided, falling back to GITLAB_URL env var.");
+    program.url = process.env.GITLAB_URL;
+    if (!program.url) {
+      logger.debug('GITLAB_URL env var note set, falling back to http://gitlab.com');
+      program.url = 'http://gitlab.com';
+    }
+  }
+};
+
+const resolveToken = () => {
   if (!program.token) {
     logger.debug("'--token' flag not provided, falling back to GITLAB_TOKEN env var.");
     program.token = process.env.GITLAB_TOKEN;
@@ -26,7 +37,7 @@ const validateToken = () => {
   }
 };
 
-const validateProjectId = () => {
+const resolveProjectId = () => {
   if (!program.projectId) {
     logger.debug("'--project-id' flag not provided, falling back to CI_PROJECT_ID env var.");
     program.projectId = process.env.CI_PROJECT_ID;
@@ -38,24 +49,36 @@ const validateProjectId = () => {
   }
 };
 
-const validateUrl = () => {
-  if (!program.url) {
-    logger.debug("'--url' flag not provided, falling back to GITLAB_URL env var.");
-    program.url = process.env.GITLAB_URL;
-    if (!program.url) {
-      logger.debug('GITLAB_URL env var note set, falling back to http://gitlab.com');
-      program.url = 'http://gitlab.com';
+const resolveRef = () => {
+  if (!program.ref) {
+    logger.debug("'--ref' flag not provided, falling back to CI_COMMIT_REF_NAME env var.");
+    program.ref = process.env.CI_COMMIT_REF_NAME;
+    if (!program.ref) {
+      logger.debug("CI_COMMIT_REF_NAME env var not set, defaulting to 'master' branch");
+      program.ref = 'master';
     }
   }
 };
 
-const validateCIOptions = () => {
-  validateUrl();
-  validateToken();
-  validateProjectId();
+const resolvePipelineId = () => {
+  if (!program.pipelineId) {
+    logger.debug("'--pipeline-id' flag not provided, falling back to CI_PIPLINE_ID env var.");
+    program.pipelineId = process.env.CI_PIPLINE_ID;
+    if (!program.pipelineId) {
+      logger.debug('CI_PIPELINE_ID env var not set, using latest pipeline id.');
+    }
+  }
+};
+
+const resolveCIDefaults = () => {
+  resolveUrl();
+  resolveToken();
+  resolveProjectId();
+  resolveRef();
+  resolvePipelineId();
 };
 
 module.exports = {
   validateCommand,
-  validateCIOptions,
+  resolveCIDefaults,
 };
