@@ -1,5 +1,7 @@
 const { createLogger, format, transports } = require('winston');
 
+const consoleTransport = new transports.Console({ level: 'info' });
+
 const logger = createLogger({
   level: 'info',
   format: format.combine(
@@ -7,7 +9,7 @@ const logger = createLogger({
     format.simple(),
   ),
   transports: [
-    new transports.Console({ level: 'info' }),
+    consoleTransport,
   ],
 });
 
