@@ -8,10 +8,13 @@ cache:
   paths:
     - node_modules/
 
+before_script:
+  - npm install
+
 test:
   stage: test
   script:
-    - npm install
+    - npm run test
     - npm link
     - glt --help
     - sleep 300
