@@ -3,6 +3,9 @@ image: node:10.15.3
 stages:
   - test
 
+variables:
+  GITLAB_TOKEN: $ACCESS_TOKEN
+
 cache:
   key: ${CI_JOB_NAME}
   paths:
