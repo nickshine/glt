@@ -12,7 +12,7 @@ const init = ({ url, token }) => {
 const filterPipelines = (pipelines, pid) => pipelines.map(p => p.id).filter(id => id < pid);
 
 const getPipelines = async ({ projectId, ref, pipelineId }) => {
-  const pipelines = await api.Pipelines.all(projectId, { ref, scope: ['running', 'pending'] });
+  const pipelines = await api.Pipelines.all(projectId, { ref, scopes: ['running', 'pending'] });
   // const pipelines = await api.Pipelines.all(projectId, { ref });
   logger.debug(`All running pipelines on branch '${ref}' for project id '${projectId}': ${JSON.stringify(pipelines, null, 2)}`);
   return filterPipelines(pipelines, pipelineId);
