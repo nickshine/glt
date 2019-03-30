@@ -48,7 +48,7 @@ Commands:
 
 ```
 
-#### `glt ci cancel `
+#### `glt ci cancel`
 
 ```
 ➜  glt ci cancel --help
@@ -58,7 +58,7 @@ Usage: glt-ci-cancel [options]
 cancel pipelines
 
 Options:
-  -u, --url <url>         GitLab instance (default: '$GITLAB_URL' || 'http://gitlab.com')
+  -u, --url <url>         GitLab instance (default: '$GITLAB_URL' || 'https://gitlab.com')
   -t, --token <token>     GitLab Personal Access Token used to authenticate with the API (default: '$GITLAB_TOKEN'|| '$CI_JOB_TOKEN')
   -v, --verbose           make the operation more talkative
   -p, --project-id <id>   GitLab project id (default: '$CI_PROJECT_ID')

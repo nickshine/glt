@@ -15,8 +15,8 @@ const resolveUrl = () => {
     logger.debug("'--url' flag not provided, falling back to GITLAB_URL env var.");
     program.url = process.env.GITLAB_URL;
     if (!program.url) {
-      logger.debug('GITLAB_URL env var note set, falling back to http://gitlab.com');
-      program.url = 'http://gitlab.com';
+      logger.debug('GITLAB_URL env var note set, falling back to https://gitlab.com.');
+      program.url = 'https://gitlab.com';
     }
   }
 };
@@ -54,7 +54,7 @@ const resolveRef = () => {
     logger.debug("'--ref' flag not provided, falling back to CI_COMMIT_REF_NAME env var.");
     program.ref = process.env.CI_COMMIT_REF_NAME;
     if (!program.ref) {
-      logger.debug("CI_COMMIT_REF_NAME env var not set, defaulting to 'master' branch");
+      logger.debug("CI_COMMIT_REF_NAME env var not set, defaulting to 'master' branch.");
       program.ref = 'master';
     }
   }
@@ -62,8 +62,8 @@ const resolveRef = () => {
 
 const resolvePipelineId = () => {
   if (!program.pipelineId) {
-    logger.debug("'--pipeline-id' flag not provided, falling back to CI_PIPLINE_ID env var.");
-    program.pipelineId = process.env.CI_PIPLINE_ID;
+    logger.debug("'--pipeline-id' flag not provided, falling back to CI_PIPELINE_ID env var.");
+    program.pipelineId = process.env.CI_PIPELINE_ID;
     if (!program.pipelineId) {
       logger.debug('CI_PIPELINE_ID env var not set, using latest pipeline id.');
     }

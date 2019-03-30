@@ -18,8 +18,7 @@ program
 
 (async () => {
   try {
-    logger.info('cancel fired');
-    // await gitlab.cancelPipelines(program);
+    await gitlab.cancelPipelines(program);
   } catch (e) {
     logger.error(e);
   }
