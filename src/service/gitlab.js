@@ -14,8 +14,14 @@ const filterPipelines = (pipelines, pid) => pipelines.map(p => p.id).filter(id =
 const getPipelines = async ({ projectId, ref, pipelineId }) => {
   const pipelines = await api.Pipelines.all(projectId, { ref, scope: 'running' });
   // const pipelines = await api.Pipelines.all(projectId, { ref });
-  logger.debug(`All running pipelines on branch '${ref}' for project id '${projectId}': ${JSON.stringify(pipelines, null, 2)}`);
-  return filterPipelines(pipelines, pipelineId);
+  logger.info(`${pipelines.length} running pipelines found on branch '${ref}'.`);
+  if (!pipelineId) {
+    logger.debug('No pipeline id given, returning all running pipelines unfiltered.');
+    return pipelines;
+  }
+  const filteredPipelines = filterPipelines(pipelines, pipelineId);
+  logger.debug(`Previously running pipelines on branch '${ref}' for project id '${projectId}': ${JSON.stringify(pipelines, null, 2)}`);
+  return filteredPipelines;
 };
 
 const cancelPipelines = async ({
@@ -29,7 +35,6 @@ const cancelPipelines = async ({
   let pipelines = [];
   try {
     pipelines = await getPipelines({ projectId, ref, pipelineId });
-    logger.info(`${pipelines.length} running pipelines found on branch '${ref}'.`);
     const pipelinePromises = [];
 
     pipelines.forEach((p) => {
@@ -38,7 +43,7 @@ const cancelPipelines = async ({
       pipelinePromises.push(responsePromise);
     });
     const responses = await Promise.all(pipelinePromises);
-    logger.debug(`Cancelled pipeline responses: ${JSON.stringify(responses, null, 2)}`);
+    logger.debug(`Cancelled pipelines: ${JSON.stringify(responses, null, 2)}`);
   } catch (e) {
     logger.error(e);
   }

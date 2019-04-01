@@ -13,7 +13,7 @@ program
   .option('-p, --project-id <id>', "GitLab project id (default: '$CI_PROJECT_ID')")
   .option('-i, --pipeline-id <id>', "cancel pipelines before pipeline id <id> (default: '$CI_PROJECT_ID')")
   .option('-b, --ref <ref>', "only look at pipelines on branch <ref> (default: '$CI_COMMIT_REF_NAME' || 'master')")
-  .on('command:*', resolveCIDefaults)
+  .on('command:*', () => resolveCIDefaults(program))
   .parse(process.argv);
 
 (async () => {

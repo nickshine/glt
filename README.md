@@ -67,5 +67,9 @@ Options:
   -h, --help              output usage information
 ```
 
-
-
+__Description:__ cancel any previously-running pipelines on the given branch.
+This task is intended to be run in a GitLab CI pipeline to reference `CI_PIPELINE_ID` as the
+currently running pipeline. GitLab CI currently (as of 11.x) only has the option
+to auto-cancel __pending__ non-HEAD pipelines on a branch. This task is useful
+for controlling runner availability for redundant __running__ pipelines on a
+branch.

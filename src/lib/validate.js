@@ -1,7 +1,7 @@
-const program = require('commander');
+/* eslint-disable no-param-reassign */
 const logger = require('./logger');
 
-const validateCommand = (commands) => {
+const validateCommand = (commands, program) => {
   const cmd = commands[0];
   // eslint-disable-next-line no-underscore-dangle,eqeqeq
   if (!program.commands.find(c => c._name == cmd)) {
@@ -10,7 +10,7 @@ const validateCommand = (commands) => {
   }
 };
 
-const resolveUrl = () => {
+const resolveUrl = (program) => {
   if (!program.url) {
     logger.debug("'--url' flag not provided, falling back to GITLAB_URL env var.");
     program.url = process.env.GITLAB_URL;
@@ -21,7 +21,7 @@ const resolveUrl = () => {
   }
 };
 
-const resolveToken = () => {
+const resolveToken = (program) => {
   if (!program.token) {
     logger.debug("'--token' flag not provided, falling back to GITLAB_TOKEN env var.");
     program.token = process.env.GITLAB_TOKEN;
@@ -37,7 +37,7 @@ const resolveToken = () => {
   }
 };
 
-const resolveProjectId = () => {
+const resolveProjectId = (program) => {
   if (!program.projectId) {
     logger.debug("'--project-id' flag not provided, falling back to CI_PROJECT_ID env var.");
     program.projectId = process.env.CI_PROJECT_ID;
@@ -49,7 +49,7 @@ const resolveProjectId = () => {
   }
 };
 
-const resolveRef = () => {
+const resolveRef = (program) => {
   if (!program.ref) {
     logger.debug("'--ref' flag not provided, falling back to CI_COMMIT_REF_NAME env var.");
     program.ref = process.env.CI_COMMIT_REF_NAME;
@@ -60,22 +60,22 @@ const resolveRef = () => {
   }
 };
 
-const resolvePipelineId = () => {
+const resolvePipelineId = (program) => {
   if (!program.pipelineId) {
     logger.debug("'--pipeline-id' flag not provided, falling back to CI_PIPELINE_ID env var.");
     program.pipelineId = process.env.CI_PIPELINE_ID;
     if (!program.pipelineId) {
-      logger.debug('CI_PIPELINE_ID env var not set, using latest pipeline id.');
+      logger.debug('CI_PIPELINE_ID env var not set, tasks will run against all pipelines.');
     }
   }
 };
 
-const resolveCIDefaults = () => {
-  resolveUrl();
-  resolveToken();
-  resolveProjectId();
-  resolveRef();
-  resolvePipelineId();
+const resolveCIDefaults = (program) => {
+  resolveUrl(program);
+  resolveToken(program);
+  resolveProjectId(program);
+  resolveRef(program);
+  resolvePipelineId(program);
 };
 
 module.exports = {
