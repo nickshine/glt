@@ -21,5 +21,5 @@ test:
     - npm link
     - glt --help
     - glt ci cancel -v
-    - sleep 300
+    - sleep 60
   coverage: '/All files[\s+|]+(\d*.\d*)/'

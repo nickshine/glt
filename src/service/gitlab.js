@@ -20,7 +20,7 @@ const getPipelines = async ({ projectId, ref, pipelineId }) => {
     return pipelines;
   }
   const filteredPipelines = filterPipelines(pipelines, pipelineId);
-  logger.debug(`Previously running pipelines on branch '${ref}' for project id '${projectId}': ${JSON.stringify(pipelines, null, 2)}`);
+  logger.debug(`Previously running pipelines on branch '${ref}' for project id '${projectId}': ${JSON.stringify(filteredPipelines, null, 2)}`);
   return filteredPipelines;
 };
 
