@@ -1,17 +1,16 @@
 const { ProjectsBundle } = require('gitlab/dist/es5');
 const logger = require('../lib/logger');
 
-let api;
-
-const init = ({ url, token }) => {
-  if (!api) {
-    api = new ProjectsBundle({ url, token });
-  }
-};
+const init = ({ url, token }) => new ProjectsBundle({ url, token });
 
 const filterPipelines = (pipelines, pid) => pipelines.map(p => p.id).filter(id => id < pid);
 
-const getPipelines = async ({ projectId, ref, pipelineId }) => {
+const getPipelines = async ({
+  api,
+  projectId,
+  ref,
+  pipelineId,
+}) => {
   const pipelines = await api.Pipelines.all(projectId, { ref, scope: 'running' });
   // const pipelines = await api.Pipelines.all(projectId, { ref });
   logger.info(`${pipelines.length} running pipelines found on branch '${ref}'.`);
@@ -31,10 +30,16 @@ const cancelPipelines = async ({
   ref,
   pipelineId,
 }) => {
-  init({ url, token });
+  const api = init({ url, token });
+
   let pipelines = [];
   try {
-    pipelines = await getPipelines({ projectId, ref, pipelineId });
+    pipelines = await getPipelines({
+      api,
+      projectId,
+      ref,
+      pipelineId,
+    });
     const pipelinePromises = [];
 
     pipelines.forEach((p) => {

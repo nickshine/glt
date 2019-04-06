@@ -3,7 +3,7 @@
 const program = require('commander');
 const gitlab = require('./service/gitlab');
 const logger = require('./lib/logger');
-const { resolveCIDefaults } = require('./lib/validate');
+const { resolveCIDefaults } = require('./lib/resolver');
 const addCommonOptions = require('./lib/common-options');
 
 addCommonOptions(program);
