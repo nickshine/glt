@@ -8,5 +8,5 @@ program
   .version(version, '-V, --version')
   .description('A cli for GitLab tasks')
   .command('ci', 'perform GitLab CI tasks')
-  .on('command:*', validateCommand)
+  .on('command:*', commands => validateCommand(commands, program))
   .parse(process.argv);
