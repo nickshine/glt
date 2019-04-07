@@ -39,6 +39,6 @@ release-dry-run:
 release:
   stage: release
   script:
-    - npm semantic-release
+    - npx semantic-release
   only:
     - master
