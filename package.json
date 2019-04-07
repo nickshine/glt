@@ -17,6 +17,9 @@
     "type": "git",
     "url": "https://gitlab.com/nickshine/glt.git"
   },
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "keywords": [
     "gitlab",
     "cli"

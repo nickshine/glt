@@ -7,6 +7,7 @@ stages:
 variables:
   GITLAB_TOKEN: $ACCESS_TOKEN
   NPM_TOKEN: $NPM_BEARER_TOKEN
+  HUSKY_SKIP_INSTALL: "true"
 
 cache:
   key: ${CI_JOB_NAME}
@@ -20,15 +21,24 @@ test:
   stage: test
   script:
     - npm run test
-    - npm link
-    - glt --help
-    - glt ci cancel -v
-    - sleep 60
   coverage: '/All files[\s+|]+(\d*.\d*)/'
+
+test-cancel:
+  stage: test
+  script:
+    - npm link
+    - glt ci cancel -v
 
 release-dry-run:
   stage: release
   script:
     - npx semantic-release --dry-run --branch $CI_COMMIT_REF_NAME
   except:
+    - master
+
+release:
+  stage: release
+  script:
+    - npm semantic-release
+  only:
     - master
