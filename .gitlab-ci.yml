@@ -23,11 +23,17 @@ test:
     - npm run test
   coverage: '/All files[\s+|]+(\d*.\d*)/'
 
-test-cancel:
+test-ci-cancel:
   stage: test
   script:
     - npm link
     - glt ci cancel -v
+
+test-env-clean:
+  stage: test
+  script:
+    - npm link
+    - glt env clean -v
 
 release-dry-run:
   stage: release
