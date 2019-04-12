@@ -1,7 +1,6 @@
 const test = require('tape-async');
 const sinon = require('sinon');
-const clearRequire = require('clear-require');
-const { resolveCIDefaults } = require('../src/lib/resolver');
+const { resolveCIDefaults, resolveEnvDefaults } = require('../src/lib/resolver');
 
 const setup = () => {
   const programStub = {};
@@ -16,8 +15,6 @@ const setup = () => {
 
 const teardown = () => {
   sinon.restore();
-  clearRequire('../src/glt');
-  clearRequire('../src/glt-ci');
 };
 
 test('resolveCIDefaults - no flags, no env vars', (assert) => {
@@ -99,4 +96,19 @@ test('resolveCIDefaults - with flags', async (assert) => {
   assert.equal(stub.projectId, 'fake-project-id', 'Project ID set from flag');
   assert.equal(stub.ref, 'fake-ref', 'Ref set from flag');
   assert.equal(stub.pipelineId, 'fake-pipeline-id', 'Pipeline ID set from flag');
+});
+
+test('resolveEnvDefaults', async (assert) => {
+  assert.plan(2);
+
+  const stub = {
+    url: 'fake-url',
+    token: 'fake-token',
+    projectId: 'fake-project-id',
+  };
+
+  resolveEnvDefaults(stub);
+
+  assert.equal(stub.ref, undefined, 'resolveRef not called as expected');
+  assert.equal(stub.pipelineId, undefined, 'resolvePipelineId not called called as expected');
 });
