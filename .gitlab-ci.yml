@@ -14,13 +14,6 @@ cache:
   paths:
     - node_modules/
 
-# prevent pipeline from popping up as "skippped" for [skip ci] commits
-#  this is to avoid the "Skipped" badge status on releases that push [skip ci] commit messages
-.except-skip: &except-skip
-  except:
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /\[skip-ci\]/
-
 before_script:
   - npm install
 
@@ -29,31 +22,25 @@ test:
   script:
     - npm run test
   coverage: '/All files[\s+|]+(\d*.\d*)/'
-  <<: *except-skip
 
 test-ci-cancel:
   stage: test
   script:
     - npm link
     - glt ci cancel -v
-  <<: *except-skip
 
 test-env-clean:
   stage: test
   script:
     - npm link
     - glt env clean -v
-  <<: *except-skip
 
 release-dry-run:
   stage: release
   script:
     - npx semantic-release --dry-run --branch $CI_COMMIT_REF_NAME
   except:
-    refs:
-      - master
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /\[skip-ci\]/
+    - master
 
 release:
   stage: release
@@ -61,4 +48,3 @@ release:
     - npx semantic-release
   only:
     - master
-  <<: *except-skip
