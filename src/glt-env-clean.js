@@ -3,7 +3,7 @@
 const program = require('commander');
 const gitlab = require('./service/gitlab');
 const logger = require('./lib/logger');
-const { resolveCIDefaults } = require('./lib/resolver');
+const { resolveEnvDefaults } = require('./lib/resolver');
 const addCommonOptions = require('./lib/common-options');
 
 addCommonOptions(program);
@@ -11,7 +11,7 @@ addCommonOptions(program);
 program
   .description('clean environments (delete environments with zero deployments)')
   .option('-p, --project-id <id>', "GitLab project id (default: '$CI_PROJECT_ID')")
-  .on('command:*', () => resolveCIDefaults(program))
+  .on('command:*', () => resolveEnvDefaults(program))
   .parse(process.argv);
 
 (async () => {

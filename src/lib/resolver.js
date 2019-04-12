@@ -69,6 +69,13 @@ const resolveCIDefaults = (program) => {
   resolvePipelineId(program);
 };
 
+const resolveEnvDefaults = (program) => {
+  resolveUrl(program);
+  resolveToken(program);
+  resolveProjectId(program);
+};
+
 module.exports = {
   resolveCIDefaults,
+  resolveEnvDefaults,
 };

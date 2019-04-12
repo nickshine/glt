@@ -17,6 +17,7 @@ const teardown = () => {
   sinon.restore();
   clearRequire('../src/glt');
   clearRequire('../src/glt-ci');
+  clearRequire('../src/glt-env');
 };
 
 test('invalid command', (assert) => {
@@ -89,3 +90,30 @@ test('valid command glt-ci verbose', (assert) => {
   assert.ok(processStub.notCalled, 'Valid command entered with verbose flag');
 });
 
+test('invalid command glt-env', (assert) => {
+  assert.plan(1);
+
+  const { processStub } = setup();
+  sinon.stub(process, 'argv').value(['node', './src/glt-env.js', 'invalid-command']);
+  sinon.stub(process, 'env').value({});
+
+  /* eslint-disable global-require */
+  require('../src/glt-env');
+
+  teardown();
+  assert.ok(processStub.calledWith(1), 'Command not found');
+});
+
+test('valid command glt-env', (assert) => {
+  assert.plan(1);
+
+  const { processStub } = setup();
+  sinon.stub(process, 'argv').value(['node', './src/glt-env.js', 'clean']);
+  sinon.stub(process, 'env').value({});
+
+  /* eslint-disable global-require */
+  require('../src/glt-env');
+
+  teardown();
+  assert.ok(processStub.notCalled, 'Valid command entered');
+});
