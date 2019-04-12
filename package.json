@@ -7,6 +7,7 @@
     "glt": "./src/glt.js"
   },
   "scripts": {
+    "cm": "git-cz",
     "lint": "eslint .",
     "debug": "node --inspect-brk src/glt.js",
     "debug-ci": "node --inspect-brk src/glt-ci.js",
