@@ -10,11 +10,16 @@ https://gitlab.com/nickshine/glt
 
 >A command-line interface for GitLab tasks.
 
-[Install](#install)  
-[Usage](#usage)  
-[Examples](#examples)  
-* [Cancel Redundant Pipelines From GitLab CI](#cancel-running-pipelines)
-* [Cancel Running Pipelines](#cancel-running-pipelines)
+---
+
+* [Install](#install)
+* [Usage](#usage)
+* [Tasks](#tasks)
+  * [`glt ci cancel`](#glt-ci-cancel)
+  * [`glt env clean`](#glt-env-clean)
+* [Examples](#examples)
+  * [Cancel Redundant Pipelines From GitLab CI](#cancel-running-pipelines)  
+  * [Cancel Running Pipelines](#cancel-running-pipelines)
 
 ## Install
 
@@ -39,6 +44,7 @@ Options:
 
 Commands:
   ci             perform GitLab CI tasks
+  env            perform tasks on GitLab environments
   help [cmd]     display help for [cmd]
 ```
 
@@ -58,6 +64,23 @@ Commands:
 
 ```
 
+#### `glt env`
+
+```
+Usage: glt-env [options] [command]
+
+perform tasks on GitLab Environments
+
+Options:
+  -h, --help  output usage information
+
+Commands:
+  clean       clean environments
+  help [cmd]  display help for [cmd]
+```
+
+## Tasks
+
 #### `glt ci cancel`
 
 ```
@@ -72,17 +95,42 @@ Options:
   -t, --token <token>     GitLab Personal Access Token used to authenticate with the API (default: '$GITLAB_TOKEN'|| '$CI_JOB_TOKEN')
   -v, --verbose           make the operation more talkative
   -p, --project-id <id>   GitLab project id (default: '$CI_PROJECT_ID')
-  -i, --pipeline-id <id>  cancel pipelines before pipeline id <id> (default: '$CI_PROJECT_ID')
+  -i, --pipeline-id <id>  cancel pipelines before pipeline id <id> (default: '$CI_PIPELINE_ID')
   -b, --ref <ref>         only look at pipelines on branch <ref> (default: '$CI_COMMIT_REF_NAME' || 'master')
   -h, --help              output usage information
 ```
 
 __Description:__ cancel any previously-running pipelines on the given branch.
 This task is intended to be run in a GitLab CI pipeline to reference `CI_PIPELINE_ID` as the
-currently running pipeline. GitLab CI currently (as of 11.x) only has the option
+currently running pipeline.
+
+__Use Case:__ GitLab CI currently (as of 11.x) only has the option
 to auto-cancel __pending__ non-HEAD pipelines on a branch. This task is useful
 for controlling runner availability for redundant __running__ pipelines on a
 branch.
+
+#### `glt env clean`
+
+```bash
+Usage: glt-env-clean [options]
+
+clean environments (delete environments with zero deployments)
+
+Options:
+  -u, --url <url>        GitLab instance (default: '$GITLAB_URL' || 'https://gitlab.com')
+  -t, --token <token>    GitLab Personal Access Token used to authenticate with the API (default: '$GITLAB_TOKEN'|| '$CI_JOB_TOKEN')
+  -v, --verbose          make the operation more talkative
+  -p, --project-id <id>  GitLab project id (default: '$CI_PROJECT_ID')
+  -h, --help             output usage information
+```
+
+__Description:__ remove any existing environments that are "empty"
+(environments with zero deployments).
+
+__Use Case:__ Projects that have optional pipelines configured (with a manual
+play button trigger) will generate __empty environments__ for each commit pushed
+that is not executed/deployed, creating lots of "empty" environments that need
+to be deleted.
 
 ## Examples
 
