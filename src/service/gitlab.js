@@ -1,4 +1,5 @@
 const { ProjectsBundle } = require('gitlab/dist/es5');
+const parseAge = require('../lib/age-parser');
 const logger = require('../lib/logger');
 
 const init = ({ url, token }) => new ProjectsBundle({ url, token });
@@ -11,6 +12,7 @@ const filterEmptyEnvironments = (
 ) => environments.filter(e => !deploymentEnvIds.includes(e.id));
 
 const getDeployments = async ({ api, projectId }) => {
+  logger.info('Retrieving deployments...');
   const deployments = await api.Deployments.all(projectId);
 
   logger.info(`${deployments.length} deployments found.`);
@@ -18,7 +20,16 @@ const getDeployments = async ({ api, projectId }) => {
   return deployments;
 };
 
+const filterDeployments = (deployments, maxAge) => deployments.filter(
+  d => d.created_at < maxAge, // deployment creation occured before age threshold
+);
+
+const parseDeployments = deployments => deployments.map(
+  d => ({ created_at: Date.parse(d.created_at), env_id: d.environment.id }),
+);
+
 const getEnvironments = async ({ api, projectId }) => {
+  logger.info('Retrieving environments...');
   const environments = await api.Environments.all(projectId);
 
   logger.info(`${environments.length} environments found.`);
@@ -32,6 +43,7 @@ const getPipelines = async ({
   ref,
   pipelineId,
 }) => {
+  logger.info('Retrieving pipelines...');
   const pipelines = await api.Pipelines.all(projectId, { ref, scope: 'running' });
   // const pipelines = await api.Pipelines.all(projectId, { ref });
   logger.info(`${pipelines.length} running pipelines found on branch '${ref}'.`);
@@ -91,6 +103,7 @@ const cleanEnvironments = async ({ url, token, projectId }) => {
     logger.debug((`${emptyEnvironments.length} empty environments found.`));
 
     const environmentPromises = [];
+    logger.info('Deleting empty environments...');
     emptyEnvironments.forEach((e) => {
       logger.debug(`Deleting empty environment '${e.id}'`);
       const responsePromise = api.Environments.remove(projectId, e.id);
@@ -103,7 +116,44 @@ const cleanEnvironments = async ({ url, token, projectId }) => {
   }
 };
 
+const stopEnvironments = async ({
+  url,
+  token,
+  projectId,
+  age,
+}) => {
+  const api = init({ url, token });
+
+  try {
+    const deployments = await getDeployments({ api, projectId });
+    logger.info(`Age: ${age}`);
+    const maxAgeTimestamp = parseAge(age);
+
+    const parsedDeployments = parseDeployments(deployments);
+    logger.debug(JSON.stringify(parsedDeployments, null, 2));
+    const filteredDeployments = filterDeployments(maxAgeTimestamp);
+    logger.debug(`'${filteredDeployments.length}' deployments found older than ${new Date(maxAgeTimestamp)}.`);
+
+    const deploymentEnvIds = deployments.map(d => d.env_id);
+    logger.debug(`Deployment env ids: ${JSON.stringify(deploymentEnvIds)}`);
+
+    const environmentPromises = [];
+    logger.info('Stopping empty environments...');
+
+    filteredDeployments.forEach((d) => {
+      logger.debug(`Stopping environment '${d.env_id}'`);
+      const responsePromise = api.Environments.stop(projectId, d.env_id);
+      environmentPromises.push(responsePromise);
+    });
+    const responses = await Promise.all(environmentPromises);
+    logger.info(`${responses.length} environments stopped.`);
+  } catch (e) {
+    logger.error(e);
+  }
+};
+
 module.exports = {
   cancelPipelines,
   cleanEnvironments,
+  stopEnvironments,
 };

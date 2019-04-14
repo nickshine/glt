@@ -1,10 +1,12 @@
 # glt
 
+
 [![pipeline status](https://gitlab.com/nickshine/glt/badges/master/pipeline.svg)](https://gitlab.com/nickshine/glt/commits/master)
 [![coverage report](https://gitlab.com/nickshine/glt/badges/master/coverage.svg)](https://gitlab.com/nickshine/glt/commits/master)
 [![npm](https://img.shields.io/npm/v/glt.svg)](https://www.npmjs.com/package/glt)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 
 https://gitlab.com/nickshine/glt
 
@@ -20,6 +22,7 @@ https://gitlab.com/nickshine/glt
 * [Examples](#examples)
   * [Cancel Redundant Pipelines From GitLab CI](#cancel-running-pipelines)  
   * [Cancel Running Pipelines](#cancel-running-pipelines)
+* [Contributing](#contributing)
 
 ## Install
 
@@ -172,6 +175,10 @@ npm install -g glt
 glt ci cancel -t $TOKEN -p $PROJECT_ID -b my-branch -v
 
 ```
+
+## Contributing
+
+Contributions are welcome! Help add tasks to `glt`! See the [Contributing Guide](CONTRIBUTING.md).
 
 [predefined-vars]:https://docs.gitlab.com/ee/ci/variables/#predefined-environment-variables
 [access-tokens]:https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html
