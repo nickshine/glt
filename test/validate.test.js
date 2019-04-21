@@ -1,6 +1,7 @@
 const test = require('tape-async');
 const sinon = require('sinon');
 const clearRequire = require('clear-require');
+const { validateAge } = require('../src/lib/validate');
 
 const setup = () => {
   const programStub = {};
@@ -116,4 +117,20 @@ test('valid command glt-env', (assert) => {
 
   teardown();
   assert.ok(processStub.notCalled, 'Valid command entered');
+});
+
+test('validateAge = valid age', (assert) => {
+  assert.plan(1);
+
+  const validAge = '1d';
+
+  assert.doesNotThrow(() => validateAge(validAge), 'valid age passed regex test');
+});
+
+test('validateAge = invalid age', (assert) => {
+  assert.plan(1);
+
+  const invalidAge = '1';
+
+  assert.throws(() => validateAge(invalidAge), 'invalid age threw error as expected');
 });

@@ -23,7 +23,7 @@ const parseAge = (ageString) => {
 
   const nowMs = Date.now();
   const maxAgeMs = nowMs - ageMs;
-  logger.debug(`Max age timestamp: ${new Date(maxAgeMs)}`);
+  logger.debug(`Max age timestamp: ${new Date(maxAgeMs)} ('${ageString}' before now)`);
 
   return maxAgeMs;
 };
