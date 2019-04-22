@@ -19,9 +19,11 @@ https://gitlab.com/nickshine/glt
 * [Tasks](#tasks)
   * [`glt ci cancel`](#glt-ci-cancel)
   * [`glt env clean`](#glt-env-clean)
+  * [`glt env stop`](#glt-env-stop)
 * [Examples](#examples)
   * [Cancel Redundant Pipelines From GitLab CI](#cancel-running-pipelines)  
   * [Cancel Running Pipelines](#cancel-running-pipelines)
+  * [Stop Environments Older than One Week From GitLab CI](#stop-environments-older-than-one-week)
 * [Contributing](#contributing)
 
 ## Install
@@ -79,6 +81,7 @@ Options:
 
 Commands:
   clean       clean environments
+  stop        stop environments
   help [cmd]  display help for [cmd]
 ```
 
@@ -135,6 +138,28 @@ play button trigger) will generate __empty environments__ for each commit pushed
 that is not executed/deployed, creating lots of "empty" environments that need
 to be deleted.
 
+#### `glt env stop`
+
+```bash
+Usage: glt-env-stop [options]
+
+stop environments with deployments older than a specified age
+
+Options:
+  -u, --url <url>        GitLab instance (default: '$GITLAB_URL' || 'https://gitlab.com')
+  -t, --token <token>    GitLab Personal Access Token used to authenticate with the API (default: '$GITLAB_TOKEN'|| '$CI_JOB_TOKEN')
+  -v, --verbose          make the operation more talkative
+  -p, --project-id <id>  GitLab project id (default: '$CI_PROJECT_ID')
+  -a, --age <age>        stop environmments with deployments older than <age> (default: "1w")
+  -h, --help             output usage information
+```
+
+__Description:__ stop environments that only have deployments older than a specified age.
+
+__Use Case:__ Projects utilizing dynamic environments via the [Gitlab Review Apps][review-apps] 
+feature may need to control environment quotas by forcing an environment of a
+certain age to be stopped and [cleaned up][auto-stopping-env].
+
 ## Examples
 
 ##### Cancel Redundant Pipelines From GitLab CI
@@ -176,9 +201,33 @@ glt ci cancel -t $TOKEN -p $PROJECT_ID -b my-branch -v
 
 ```
 
+##### Stop Environments Older than One Week From GitLab CI
+
+In a GitLab CI pipeline, the following example will stop environments with no
+deployments younger than 1 week old on project `CI_PROJECT_ID` using a provided
+[Personal Access Token][access-tokens] set on environment variable `GITLAB_TOKEN`.
+
+```yaml
+image: node:10
+
+stages:
+  - test
+
+variables:
+  GITLAB_TOKEN: $ACCESS_TOKEN       # ACCESS_TOKEN stored in project env vars
+
+deploy:
+  stage: deploy
+  script:
+    - npx glt env stop -a 1w
+    - kubectl apply -f deployment.yaml
+```
+
 ## Contributing
 
 Contributions are welcome! Help add tasks to `glt`! See the [Contributing Guide](CONTRIBUTING.md).
 
 [predefined-vars]:https://docs.gitlab.com/ee/ci/variables/#predefined-environment-variables
 [access-tokens]:https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html
+[review-apps]:https://docs.gitlab.com/ee/ci/review_apps/
+[auto-stopping-env]:https://docs.gitlab.com/ee/ci/environments.html#automatically-stopping-an-environment

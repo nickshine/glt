@@ -12,7 +12,7 @@ addCommonOptions(program);
 program
   .description('stop environments with deployments older than a specified age')
   .option('-p, --project-id <id>', "GitLab project id (default: '$CI_PROJECT_ID')")
-  .option('-a, --age <age>', 'stop environmments with deployments older than <age>', '')
+  .option('-a, --age <age>', 'stop environmments with deployments older than <age>', '1w')
   .on('command:*', () => resolveEnvDefaults(program))
   .parse(process.argv);
 
