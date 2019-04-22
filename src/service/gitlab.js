@@ -1,5 +1,6 @@
 const { ProjectsBundle } = require('gitlab/dist/es5');
-const parseAge = require('../lib/age-parser'); const logger = require('../lib/logger');
+const parseAge = require('../lib/age-parser');
+const logger = require('../lib/logger');
 
 const init = ({ url, token }) => new ProjectsBundle({ url, token });
 
