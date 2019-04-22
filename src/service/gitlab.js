@@ -1,4 +1,5 @@
 const { ProjectsBundle } = require('gitlab/dist/es5');
+const parseAge = require('../lib/age-parser');
 const logger = require('../lib/logger');
 
 const init = ({ url, token }) => new ProjectsBundle({ url, token });
@@ -11,14 +12,39 @@ const filterEmptyEnvironments = (
 ) => environments.filter(e => !deploymentEnvIds.includes(e.id));
 
 const getDeployments = async ({ api, projectId }) => {
-  const deployments = await api.Deployments.all(projectId);
+  logger.info('Retrieving deployments...');
+  const deployments = await api.Deployments.all(projectId, { sort: 'desc' });
 
   logger.info(`${deployments.length} deployments found.`);
   logger.debug(`Existing deployments: ${JSON.stringify(deployments, null, 2)}`);
   return deployments;
 };
 
+const getOldEnvs = (deployments, maxAge) => {
+  const activeEnvs = new Set();
+  const oldEnvs = new Set();
+
+  deployments.forEach((d) => {
+    if (d.created_at >= maxAge) {
+      activeEnvs.add(d.env_id);
+    } else {
+      oldEnvs.add(d.env_id);
+    }
+  });
+
+  // filter out oldEnv ids that are also present in activeEnvs
+  const filteredOldEnvs = [...oldEnvs].filter(e => !activeEnvs.has(e));
+
+  logger.debug(`'${filteredOldEnvs.length}' environments found with latest deployments older than ${new Date(maxAge)}.`);
+  return filteredOldEnvs;
+};
+
+const transformDeployments = deployments => deployments.map(
+  d => ({ created_at: Date.parse(d.created_at), env_id: d.environment.id }),
+);
+
 const getEnvironments = async ({ api, projectId }) => {
+  logger.info('Retrieving environments...');
   const environments = await api.Environments.all(projectId);
 
   logger.info(`${environments.length} environments found.`);
@@ -32,6 +58,7 @@ const getPipelines = async ({
   ref,
   pipelineId,
 }) => {
+  logger.info('Retrieving pipelines...');
   const pipelines = await api.Pipelines.all(projectId, { ref, scope: 'running' });
   // const pipelines = await api.Pipelines.all(projectId, { ref });
   logger.info(`${pipelines.length} running pipelines found on branch '${ref}'.`);
@@ -91,6 +118,7 @@ const cleanEnvironments = async ({ url, token, projectId }) => {
     logger.debug((`${emptyEnvironments.length} empty environments found.`));
 
     const environmentPromises = [];
+    logger.info('Deleting empty environments...');
     emptyEnvironments.forEach((e) => {
       logger.debug(`Deleting empty environment '${e.id}'`);
       const responsePromise = api.Environments.remove(projectId, e.id);
@@ -103,7 +131,46 @@ const cleanEnvironments = async ({ url, token, projectId }) => {
   }
 };
 
+const stopEnvironments = async ({
+  url,
+  token,
+  projectId,
+  age,
+}) => {
+  const api = init({ url, token });
+
+  try {
+    const deployments = await getDeployments({ api, projectId });
+    logger.info(`Age: ${age}`);
+    const maxAgeTimestamp = parseAge(age);
+
+    const transformedDeployments = transformDeployments(deployments);
+    logger.debug(`Transformed deployments: ${JSON.stringify(transformedDeployments, null, 2)}`);
+    const oldEnvs = getOldEnvs(transformedDeployments, maxAgeTimestamp);
+
+    if (oldEnvs.length) {
+      logger.debug(`Old envs: ${JSON.stringify(oldEnvs)}`);
+      logger.info('Stopping old environments...');
+    } else {
+      logger.info('No old envs found.');
+    }
+
+    const environmentPromises = [];
+
+    oldEnvs.forEach((eid) => {
+      logger.debug(`Stopping environment '${eid}'`);
+      const responsePromise = api.Environments.stop(projectId, eid);
+      environmentPromises.push(responsePromise);
+    });
+    const responses = await Promise.all(environmentPromises);
+    logger.info(`${responses.length} environments stopped.`);
+  } catch (e) {
+    logger.error(e);
+  }
+};
+
 module.exports = {
   cancelPipelines,
   cleanEnvironments,
+  stopEnvironments,
 };

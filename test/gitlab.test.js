@@ -3,6 +3,7 @@ const sinon = require('sinon');
 const proxyquire = require('proxyquire').noCallThru();
 
 const setup = () => {
+
   const pipelinesStub = {
     all: sinon.stub(),
     cancel: sinon.stub(),
@@ -15,6 +16,7 @@ const setup = () => {
   const environmentsStub = {
     all: sinon.stub(),
     remove: sinon.stub(),
+    stop: sinon.stub(),
   };
 
   function MockProjectsBundle() {
@@ -201,4 +203,124 @@ test('cleanEnvironments - thrown error', async (assert) => {
   assert.ok(deploymentsStub.all.calledOnce, 'Deployments API - GET all - called once as expected');
   assert.ok(environmentsStub.all.calledOnce, 'Environments API - GET all - called once as expected');
   assert.ok(environmentsStub.remove.notCalled, 'Environments API - remove - not called as expected');
+});
+
+test('stopEnvironments - no old environments', async (assert) => {
+  assert.plan(2);
+
+  const { gitlab, deploymentsStub, environmentsStub } = setup();
+  const optionsStub = {
+    url: 'fake-url',
+    token: 'fake-token',
+    projectId: 'fake-projectId',
+    age: '1h',
+  };
+
+
+  deploymentsStub.all.returns([]);
+
+  await gitlab.stopEnvironments(optionsStub);
+
+  teardown();
+
+  assert.ok(deploymentsStub.all.calledOnce, 'Deployment API - GET all - called once as expected');
+  assert.ok(environmentsStub.stop.notCalled, 'Environments API - stop - not called as expected');
+});
+
+test('stopEnvironments - with old environments', async (assert) => {
+  assert.plan(2);
+
+  const { gitlab, deploymentsStub, environmentsStub } = setup();
+
+  // replaces Date object with timestamp 1 hour + 1ms > 0 epoch
+  sinon.useFakeTimers(60 * 60 * 1000 + 1);
+
+  const optionsStub = {
+    url: 'fake-url',
+    token: 'fake-token',
+    projectId: 'fake-projectId',
+    age: '1h',
+  };
+
+  deploymentsStub.all.returns([
+    {
+
+      created_at: '1970-01-01T00:00:00.000Z', // 0 epoch time, should be > 1h old for stub
+      environment: {
+        id: 1,
+      },
+    },
+    {
+      created_at: '2017-08-11T07:36:40.222Z',
+      environment: {
+        id: 2,
+      },
+    },
+  ]);
+
+  await gitlab.stopEnvironments(optionsStub);
+
+  teardown();
+
+  assert.ok(deploymentsStub.all.calledOnce, 'Deployment API - GET all - called once as expected');
+  assert.ok(environmentsStub.stop.calledOnce, 'Environments API - stop - called once as expected');
+});
+
+test('stopEnvironments - env with active and old environments should not be stopped', async (assert) => {
+  assert.plan(2);
+
+  const { gitlab, deploymentsStub, environmentsStub } = setup();
+
+  // replaces Date object with timestamp 1 hour + 1ms > 0 epoch
+  sinon.useFakeTimers(60 * 60 * 1000 + 1);
+
+  const optionsStub = {
+    url: 'fake-url',
+    token: 'fake-token',
+    projectId: 'fake-projectId',
+    age: '1h',
+  };
+
+  // one old, and one active env
+  deploymentsStub.all.returns([
+    {
+
+      created_at: '1970-01-01T00:00:00.000Z', // 0 epoch time, should be > 1h old for stub
+      environment: {
+        id: 1,
+      },
+    },
+    {
+      created_at: '2017-08-11T07:36:40.222Z',
+      environment: {
+        id: 1,
+      },
+    },
+  ]);
+
+  await gitlab.stopEnvironments(optionsStub);
+
+  teardown();
+
+  assert.ok(deploymentsStub.all.calledOnce, 'Deployment API - GET all - called once as expected');
+  assert.ok(environmentsStub.stop.notCalled, 'Environments API - stop - not called as expected');
+});
+
+test('Environments - thrown error', async (assert) => {
+  assert.plan(3);
+
+  const { gitlab, deploymentsStub, environmentsStub } = setup();
+  const optionsStub = {
+    url: 'fake-url',
+    token: 'fake-token',
+    projectId: 'fake-projectId',
+    age: '1h',
+  };
+
+  deploymentsStub.all.throws();
+
+  assert.doesNotThrow(() => gitlab.stopEnvironments(optionsStub));
+  teardown();
+  assert.ok(deploymentsStub.all.calledOnce, 'Deployments API - GET all - called once as expected');
+  assert.ok(environmentsStub.stop.notCalled, 'Environments API - stop - not called as expected');
 });
