@@ -1,3 +1,10 @@
+# [1.2.0](https://gitlab.com/nickshine/glt/compare/v1.1.0...v1.2.0) (2019-04-22)
+
+
+### Features
+
+* add glt env stop task ([8e9a41c](https://gitlab.com/nickshine/glt/commit/8e9a41c))
+
 # [1.1.0](https://gitlab.com/nickshine/glt/compare/v1.0.0...v1.1.0) (2019-04-12)
 
 
