@@ -32,7 +32,7 @@
   },
   "homepage": "https://gitlab.com/nickshine/glt#readme",
   "dependencies": {
-    "commander": "^2.19.0",
+    "commander": "^3.0.0",
     "gitlab": "^4.4.1",
     "winston": "^3.2.1"
   },
