@@ -1,3 +1,10 @@
+## [1.2.1](https://gitlab.com/nickshine/glt/compare/v1.2.0...v1.2.1) (2019-08-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency commander to v3 ([c875140](https://gitlab.com/nickshine/glt/commit/c875140))
+
 # [1.2.0](https://gitlab.com/nickshine/glt/compare/v1.1.0...v1.2.0) (2019-04-22)
 
 
