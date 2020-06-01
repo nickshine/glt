@@ -48,7 +48,7 @@
     "@semantic-release/release-notes-generator": "7.3.5",
     "clear-require": "3.0.0",
     "commitizen": "4.1.2",
-    "cz-conventional-changelog": "3.1.0",
+    "cz-conventional-changelog": "3.2.0",
     "eslint": "7.1.0",
     "eslint-config-airbnb-base": "14.1.0",
     "eslint-plugin-import": "2.20.2",
