@@ -23,7 +23,7 @@ https://gitlab.com/nickshine/glt
 * [Examples](#examples)
   * [Cancel Redundant Pipelines From GitLab CI](#cancel-running-pipelines)  
   * [Cancel Running Pipelines](#cancel-running-pipelines)
-  * [Stop Environments Older than One Week From GitLab CI](#stop-environments-older-than-one-week)
+  * [Stop Environments Older than One Week From GitLab CI](#stop-environments-older-than-one-week-from-gitlab-ci)
 * [Contributing](#contributing)
 
 ## Install
